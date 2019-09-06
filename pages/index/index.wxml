@@ -1,0 +1,226 @@
+<!-- index.wxml -->
+<view class="container">
+  <view class="h1">
+    基础信息填写
+    <view class="btn-edit" bindtap="handleEditStatus">{{canEdit ? '取消修改' : '修改'}}</view>
+  </view>
+  <view class="form-container">
+    <form bindsubmit="formSubmit" bindreset="formReset">
+      <view class="section" style="border-top: 1px solid #ebebeb;">
+        <view class="section__title">姓名:</view>
+        <view class="flex-1">
+          <input name="name" value="{{formData.name}}" placeholder="请输入姓名" />
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">性别:</view>
+        <view class="flex-1">
+          <radio-group name="sex" class="radio-group" bindchange="radioChange">
+            <label class="radio">
+              <radio value="1" checked="{{formData.sex === '1' ? true : false}}" />
+              男
+            </label>
+            <label class="radio" style="margin-left: 20rpx;">
+              <radio value="0" checked="{{formData.sex === '0' ? true : false}}" />
+              女
+            </label>
+          </radio-group>
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">出生年月:</view>
+        <view class="flex-1">
+          <input name="birthday" value="{{formData.birthday}}" placeholder="请选择出生年月" />
+          <view class="hideInput">
+            <picker mode="date" value="{{formData.birthday}}" data-key="birthday" bindchange="bindDateChange">
+              <view class="picker">请选择</view>
+            </picker>
+          </view>
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">毕业时间:</view>
+        <view class="flex-1">
+          <input name="graduateTime" value="{{formData.graduateTime}}" placeholder="请选择预计毕业时间" />
+          <view class="hideInput">
+            <picker mode="date" value="{{formData.graduateTime}}" data-key="graduateTime" bindchange="bindDateChange">
+              <view class="picker">请选择</view>
+            </picker>
+          </view>
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">学历:</view>
+        <view class="flex-1">
+          <input name="education" value="{{formData.education}}" placeholder="请选择学历" />
+          <view class="hideInput">
+            <picker bindchange="bindPickerChange" data-key="education" value="{{index}}" range="{{educationArr}}">
+              <view class="picker">请选择学历</view>
+            </picker>
+          </view>
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">专业名称:</view>
+        <view class="flex-1">
+          <input name="姓名" placeholder="请输入专业名称" />
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">专业分类:</view>
+        <view class="flex-1">
+          <input name="education" value="{{formData.major}}" placeholder="请选择专业" />
+          <view class="hideInput">
+            <picker bindchange="bindPickerChange" data-key="major" value="{{index}}" range="{{majorArr}}">
+              <view class="picker">请选择专业</view>
+            </picker>
+          </view>
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">毕业院校:</view>
+        <view class="flex-1">
+          <input name="姓名" placeholder="请输入毕业院校" />
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">院校类型:</view>
+        <view class="flex-1">
+          <input name="education" value="{{formData.schoolType}}" placeholder="请选择院校类型" />
+          <view class="hideInput">
+            <picker bindchange="bindPickerChange" data-key="schoolType" value="{{schoolType}}" range="{{schoolTypeArr}}">
+              <view class="picker">请选择院校类型</view>
+            </picker>
+          </view>
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">生源地:</view>
+        <view class="flex-1">
+          <input name="姓名" placeholder="请输入生源地" />
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">联系电话:</view>
+        <view class="flex-1">
+          <input name="姓名" placeholder="请输入联系电话" />
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">本科专业名称:</view>
+        <view class="flex-1">
+          <input name="姓名" placeholder="研究生填" />
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">本科学校名称:</view>
+        <view class="flex-1">
+          <input name="姓名" placeholder="研究生填" />
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">本科学校类型:</view>
+        <view class="flex-1">
+          <input name="education" value="{{formData.schoolType1}}" placeholder="研究生填" />
+          <view class="hideInput">
+            <picker bindchange="bindPickerChange" data-key="schoolType1" value="{{schoolType1}}" range="{{schoolTypeArr}}">
+              <view class="picker">请选择院校类型</view>
+            </picker>
+          </view>
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">是否专升本:</view>
+        <view class="flex-1">
+          <radio-group class="radio-group" bindchange="radioChange">
+            <label class="radio">
+              <radio value="1" />
+              是
+            </label>
+            <label class="radio" style="margin-left: 20rpx;">
+              <radio value="0" />
+              否
+            </label>
+          </radio-group>
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">英语技能:</view>
+        <view class="flex-1">
+          <radio-group class="radio-group" bindchange="radioChange">
+            <label class="radio">
+              <radio value="1" />
+              CET-4
+            </label>
+            <label class="radio" style="margin-left: 20rpx;">
+              <radio value="2" />
+              CET-6
+            </label>
+          </radio-group>
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">计算机等级:</view>
+        <view class="flex-1">
+          <input name="姓名" placeholder="请输入计算机等级" />
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">文体特长:</view>
+        <view class="flex-1">
+          <input name="姓名" placeholder="文体特长(选填)" />
+        </view>
+      </view>
+      <view class="section">
+        <view class="section__title">备注:</view>
+        <view class="flex-1">
+          <input name="姓名" placeholder="备注" />
+        </view>
+      </view>
+      <view class="btn-area">
+        <button form-type="submit" type="primary">{{canEdit ? "保存" : '投递'}}</button>
+      </view>
+    </form>
+    <view wx:if="{{!canEdit}}" class="form-disabled"></view>
+  </view>
+  <!-- 选择公司 -->
+  <view class="modal" wx:if="{{showModal}}">
+    <view class="modal-content">
+      <view class="modal-title">请选择投递单位</view>
+      <view class="modal-main">
+        <checkbox-group bindchange="checkboxChange">
+          <view class="company-group" wx:for="{{companyArr}}" wx:key="index">
+            <label class="checkbox">
+              <checkbox value="{{item.value}}" checked="{{item.checked}}" />
+              {{item.name}}
+            </label>
+          </view>
+        </checkbox-group>
+      </view>
+      <view class="warning">注意：已经投递单位无法取消，请慎重选择</view>
+      <view class="modal-bottom flex-container">
+        <view class="flex-1">
+          <button bindtap="handleSetShowModal">取消</button>
+        </view>
+        <view style="width: 30rpx;"></view>
+        <view class="flex-1">
+          <button bindtap="handleSubmitSelectCompany" loading="{{loading}}" type="primary">确认</button>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- 成功界面 -->
+  <view class="modal" wx:if="{{showSuccess}}">
+    <view class="modal-content">
+      <view class="modal-main" style="text-align: center">
+        <block>
+          <icon type="success" size="{{80}}" />
+        </block>
+        <view style="margin-bottom: 40rpx;">投递成功</view>
+        <button type="primary" bindtap="handleSetSuccss">
+          确定
+        </button>
+      </view>
+    </view>
+  </view>
+</view>
