@@ -1,9 +1,8 @@
 {
   "pages": [
-    "pages/examination/index",
     "pages/index/index",
+    "pages/examination/index",
     "pages/default/index"
-
   ],
   "window": {
     "backgroundTextStyle": "light",

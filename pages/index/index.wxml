@@ -211,7 +211,7 @@
   </view>
   <!-- 成功界面 -->
   <view class="modal" wx:if="{{showSuccess}}">
-    <view class="modal-content">
+    <view class="modal-content" style="padding-bottom:30rpx;">
       <view class="modal-main" style="text-align: center">
         <block>
           <icon type="success" size="{{80}}" />

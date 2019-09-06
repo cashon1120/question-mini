@@ -28,9 +28,6 @@ App({
               const data = {
                 code: res.code,
                 wxUserInfo: JSON.stringify(wxUserInfo),
-                deviceType: 2,
-                deviceName: self.globalData.header.brand,
-                deviceNo: 'xiaochengxu'
               }
               http('user/weChatLogin', 'POST', data, '登录中...').then(res => {
                 if (res.data.state === 3) {
@@ -38,7 +35,6 @@ App({
                     url: '/pages/login/bindPhone/index',
                   })
                 } else {
-                  self.globalData.userInfo = res.data
                   resolve(res)
                 }
               })
@@ -49,9 +45,9 @@ App({
     })
 
   },
+  
   globalData: {
     userInfo: null,
-    header: {},
     code: '', // 微信登录code 
   },
 })

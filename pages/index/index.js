@@ -14,8 +14,8 @@ Page({
       major: '',
       schoolType: '',
       schoolType1: '',
-    },
-    loading: false,
+    }, // 表单数据
+    loading: false, // 加载
     educationArr: ['博士研究生', '硕士研究生', '大学本科', '大学专科'],
     majorArr: ['电工类', '电子信息类', '其它工学类', '大学金融财务类', '管理类', '其他'],
     schoolTypeArr: ['985工程院校', '211工程院校', '电力部属院校', '一般本科院校', '独立学院', '国(境)外院校', '其他'],
@@ -39,16 +39,17 @@ Page({
         name: '成功公司',
         value: '5'
       }
-    ],
-    showModal: false,
-    showSuccess: false,
-    canEdit: false,
-    selectedCompany: []
+    ], // 公司列表
+    showModal: false, // 显示投递公司模态框
+    showSuccess: false, // 显示成功界面
+    canEdit: false, // 是否可编辑
+    selectedCompany: [] // 已先公司列表
   },
 
   onLoad: function () {
     this.initValidate()
   },
+  // 初始化表单验证
   initValidate() {
     const rules = {
       name: {
@@ -101,7 +102,6 @@ Page({
       educationArr,
       majorArr,
       schoolTypeArr
-
     } = this.data
 
     switch (key) {
@@ -135,6 +135,7 @@ Page({
     })
   },
 
+  // 提交表单
   formSubmit: function (e) {
     const params = e.detail.value
     //校验表单
@@ -151,6 +152,10 @@ Page({
       code: app.globalData.code
     }
 
+    // 验证通过后显示选择公司模态框, 看是否要先提交个人信息再显示还是选完公司后一起提交
+    wx.showLoading({
+      title: '加载中',
+    })
     this.handleSetShowModal()
     // http('user/additionalMaterials', 'POST', data).then(res => {
     //   app.globalData.userInfo = res.data
@@ -194,10 +199,24 @@ Page({
     this.setData({
       loading: true
     })
+    wx.showLoading({
+      title: '加载中'
+    })
+        // http('user/additionalMaterials', 'POST', data).then(res => {
+    //   app.globalData.userInfo = res.data
+    //   app.globalData.header.authorization = `YTX_STORE;${res.data.token}`
+    //   wx.switchTab({
+    //     url: '/pages/index/index',
+    //   })
+    //   wx.showToast({
+    //     title: '绑定成功'
+    //   })
+    // })
     this.handleSetShowModal()
     this.handleSetSuccss()
   },
 
+  // 投递成功
   handleSetSuccss:function(){
     const { showSuccess} = this.data
     this.setData({

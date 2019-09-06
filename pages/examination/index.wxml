@@ -63,7 +63,7 @@
     </view> -->
   </view>
   <view class="btn-area">
-    <button bindtap="handleSubmit" type="primary">提交</button>
+    <button bindtap="handleSubmit" loading="{{loading}}" type="primary">提交</button>
   </view>
   <!-- 成功界面 -->
   <view class="modal" wx:if="{{showSuccess}}">

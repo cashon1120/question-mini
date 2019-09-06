@@ -1,11 +1,12 @@
 // pages/default/index.js
+import http from '../../utils/http.js'
 const app = getApp()
 import {
   hasObj
 } from '../../utils/util.js'
 Page({
   data: {
-    showSuccess: false,
+    showSuccess: false, // 提交结果
     questionArr: [{
       title: '为加强电力生产现场管理，规范（），保证人身电网和设备安全，依据国家有关法律、法规，结合电力生产的实际，制定了安全管理规定。',
       id: 1,
@@ -42,17 +43,19 @@ Page({
       }],
       checked: [],
       type: 1
-    }],
-    userAnswer: [],
-    userAnswered: 0,
-    timeLeft: 1,
+    }], // 题目列表
+    userAnswer: [], // 答题结果
+    userAnswered: 0, // 已答题数量
+    timeLeft: 60, // 答题时间(单位: 分)
     formatLeftTime: '',
-    timesUp: false
+    timesUp: false, // 是否结束
+    loading: false, // 加载
   },
   onLoad: function () {
     this.setLeftTime()
   },
 
+  // 倒计时计时器
   setLeftTime() {
     let {
       timeLeft
@@ -69,6 +72,7 @@ Page({
       const leftM = shengyuM.toString().padStart(2, '0')
       const leftS = (M / 1000).toString().padStart(2, '0')
 
+      // 格式化剩余时间
       this.setData({
         formatLeftTime: `${leftM}:${leftS}`
       })
@@ -81,11 +85,13 @@ Page({
         this.setData({
           timesUp: true
         })
+        // 倒计时结束后自动提交成绩
         this.uploadTest()
       }
     }, 1000);
   },
 
+  // 选中答案
   selectChange: function (e) {
     const {
       id
@@ -104,6 +110,7 @@ Page({
       })
       return
     }
+    // hasObj 判断是否有当前答题数据, 有的话返回 对应索引: index
     const index = hasObj(userAnswer, id)
     if (index === false && index !== 0) {
       userAnswer.push({
@@ -120,12 +127,14 @@ Page({
     })
   },
 
+  // 设置先答题结果
   setUserAnswered: function () {
     const {
       userAnswer
     } = this.data
     let userAnswered = 0
     userAnswer.forEach(item => {
+      // 多选答案结果是数组, 加判断是否有答案
       if (typeof (item.value) === 'object') {
         if (item.value.length > 0) {
           userAnswered += 1
@@ -145,8 +154,16 @@ Page({
   handleSubmit: function () {
     const {
       userAnswered,
-      questionArr
+      questionArr,
+      timesUp,
     } = this.data
+    if (timesUp) {
+      wx.showToast({
+        icon: 'none',
+        title: '考试时间已结束, 不能答题!'
+      })
+      return
+    }
     if (userAnswered < questionArr.length) {
       wx.showToast({
         icon: 'none',
@@ -154,6 +171,9 @@ Page({
       })
       return
     }
+    this.setData({
+      loading: true
+    })
     this.uploadTest()
   },
 
@@ -163,8 +183,10 @@ Page({
       userAnswer
     } = this.data
     http('user/additionalMaterials', 'POST', data).then(res => {
+      // 提交成功
       this.setData({
-        showSuccess: true
+        showSuccess: true,
+        loading: false
       })
     })
   }
