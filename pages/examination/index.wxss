@@ -1,0 +1,35 @@
+.top{
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #ebebeb;
+  padding: 30rpx;
+  box-sizing: border-box;
+}
+.title{
+  margin: 20rpx 0;
+}
+.question{
+  padding: 130rpx 30rpx 0 30rpx;
+}
+.question-list{
+  background: #fff;
+  border: 1px solid #ebebeb;
+  padding: 30rpx;
+  margin-bottom: 30rpx;
+}
+.answer view{
+  margin-bottom: 20rpx;
+}
+.answer view:active{
+  background: #ebebeb;
+}
+.answer view label{
+  width: 100% !important;
+  display: block;
+}
+.current{
+  font-size: 24rpx;
+  color: #666;
+}

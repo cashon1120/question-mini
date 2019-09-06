@@ -1,0 +1,79 @@
+<wxs module="showLetter" src="../../utils/showLetter.wxs"></wxs>
+<view>
+  <view class="flex-container top">
+    <view class="flex-1">已做 {{userAnswered}} 题, 未做 {{questionArr.length - userAnswered}} 题</view>
+    <view>{{formatLeftTime}}</view>
+  </view>
+  <view class="question">
+    <view class="question-list" wx:for="{{questionArr}}" wx:for-index="idx" wx:for-item="item" wx:key="{{item.id}}">
+      <view class="current">{{idx+1}}/{{questionArr.length}} {{item.type ? '多选题' : '单选题'}}</view>
+      <view class="title">{{item.title}}</view>
+      <view class="answer" wx:if="{{item.type === 0}}">
+        <radio-group data-id="{{item.id}}" bindchange="selectChange">
+          <view wx:for="{{item.answers}}" wx:for-index="index" wx:for-item="answers" wx:key="{{answers.id}}">
+            <label class="radio">
+              <radio value="{{answers.id}}" />
+              {{showLetter.format(index)}}.{{answers.value}}
+            </label>
+          </view>
+        </radio-group>
+      </view>
+      <view class="answer" wx:else>
+        <checkbox-group data-id="{{item.id}}" bindchange="selectChange">
+          <view wx:for="{{item.answers}}" wx:for-index="index" wx:for-item="answers" wx:key="{{answers.id}}">
+            <label class="radio">
+              <checkbox value="{{answers.id}}" />
+              {{showLetter.format(index)}}.{{answers.value}}
+            </label>
+          </view>
+        </checkbox-group>
+      </view>
+    </view>
+    <!-- <view class="question-list">
+      <view class="current">2/20 单选题</view>
+      <view class="title">为加强电力生产现场管理，规范（），保证人身电网和设备安全，依据国家有关法律、法规，结合电力生产的实际，制定了安全管理规定。</view>
+      <view class="answer">
+        <checkbox-group bindchange="checkboxChange">
+          <view>
+            <label class="radio">
+              <checkbox value="" />
+              A.各类工作人员的行为各类工作人员的行为各类工作人员的行为各类工作人员的行为
+            </label>
+          </view>
+          <view>
+            <label class="radio">
+              <checkbox value="" />
+              B.各类工作人员的行为各类工作人
+            </label>
+          </view>
+          <view>
+            <label class="radio">
+              <checkbox value="" />
+              C.各类工作人员的行为各类工
+            </label>
+          </view>
+          <view>
+            <label class="radio">
+              <checkbox value="" />
+              D.各类工作人员的行为各类工作
+            </label>
+          </view>
+        </checkbox-group>
+      </view>
+    </view> -->
+  </view>
+  <view class="btn-area">
+    <button bindtap="handleSubmit" type="primary">提交</button>
+  </view>
+  <!-- 成功界面 -->
+  <view class="modal" wx:if="{{showSuccess}}">
+    <view class="modal-content">
+      <view class="modal-main" style="text-align: center">
+        <block>
+          <icon type="success" size="{{80}}" />
+        </block>
+        <view style="margin-bottom: 40rpx;">提交成功</view>
+      </view>
+    </view>
+  </view>
+</view>

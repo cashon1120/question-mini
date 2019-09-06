@@ -128,10 +128,6 @@ Page({
 
   },
 
-  checkboxChange: function (e) {
-    console.log('checkbox发生change事件，携带value值为：', e.detail.value)
-  },
-
   handleEditStatus: function(){
     const {canEdit} = this.data
     this.setData({
@@ -178,6 +174,7 @@ Page({
 
   // 选择投递公司
   checkboxChange: function(e){
+    console.log('checkbox发生change事件，携带value值为：', e.detail.value)
     const values = e.detail.value
     this.setData({
       selectedCompany: values

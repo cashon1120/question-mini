@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/examination/index",
     "pages/index/index",
     "pages/default/index"
 
