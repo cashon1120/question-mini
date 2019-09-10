@@ -1,5 +1,9 @@
 <view class="start">
-  <text class="title">电力招聘考试小助手</text>
-
-<button v-if="{{canIUser}}" type="primary" class="login-btn" bindgetuserinfo="bindGetUserInfo" open-type="getUserInfo">微信登录</button>
+  <view class="image">
+    <open-data type="userAvatarUrl"></open-data>
+  </view>
+  <view class="title">登录电力招聘考试小助手</view>
+  <button v-if="{{canIUser}}" type="primary" class="user-button" bindgetuserinfo="bindGetUserInfo" open-type="getUserInfo">
+    确认授权
+  </button>
 </view>

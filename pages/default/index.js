@@ -3,13 +3,13 @@ const app = getApp()
 Page({
   data: {
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    isSet: true
+    isSet: true,
+    userInfo: {}
   },
   onLoad: function() {
     const that = this
     wx.getSetting({
       success: function(res) {
-        console.log(res)
         if (res.authSetting['scope.userInfo']) {
           app.getAuthKey().then(res => {
             wx.switchTab({
@@ -26,7 +26,6 @@ Page({
   },
 
   bindGetUserInfo: function(e) {
-    console.log(e)
     if (e.detail.userInfo) {
       wx.getUserInfo({
         success: function (userInfo) {

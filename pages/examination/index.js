@@ -7,52 +7,58 @@ import {
 Page({
   data: {
     showSuccess: false, // 提交结果
-    questionArr: [{
-      title: '为加强电力生产现场管理，规范（），保证人身电网和设备安全，依据国家有关法律、法规，结合电力生产的实际，制定了安全管理规定。',
-      id: 1,
-      answers: [{
-        id: 1,
-        value: '各类工作人员的行为'
-      }, {
-        id: 2,
-        value: '各类工作人员的行为'
-      }, {
-        id: 3,
-        value: '各类工作人员的行为'
-      }, {
-        id: 4,
-        value: '各类工作人员的行为'
-      }],
-      checked: [],
-      type: 0
-    }, {
-      title: '这是一道多选题',
-      id: 2,
-      answers: [{
-        id: 1,
-        value: '各类工作人员的行为'
-      }, {
-        id: 2,
-        value: '各类工作人员的行为'
-      }, {
-        id: 3,
-        value: '各类工作人员的行为'
-      }, {
-        id: 4,
-        value: '各类工作人员的行为'
-      }],
-      checked: [],
-      type: 1
-    }], // 题目列表
+    // questionArr: [{
+    //   title: '为加强电力生产现场管理，规范（），保证人身电网和设备安全，依据国家有关法律、法规，结合电力生产的实际，制定了安全管理规定。',
+    //   id: 1,
+    //   answers: [{
+    //     id: 1,
+    //     value: '各类工作人员的行为'
+    //   }, {
+    //     id: 2,
+    //     value: '各类工作人员的行为'
+    //   }, {
+    //     id: 3,
+    //     value: '各类工作人员的行为'
+    //   }, {
+    //     id: 4,
+    //     value: '各类工作人员的行为'
+    //   }],
+    //   checked: [],
+    //   type: 0
+    // }, {
+    //   title: '这是一道多选题',
+    //   id: 2,
+    //   answers: [{
+    //     id: 1,
+    //     value: '各类工作人员的行为'
+    //   }, {
+    //     id: 2,
+    //     value: '各类工作人员的行为'
+    //   }, {
+    //     id: 3,
+    //     value: '各类工作人员的行为'
+    //   }, {
+    //     id: 4,
+    //     value: '各类工作人员的行为'
+    //   }],
+    //   checked: [],
+    //   type: 1
+    // }], // 题目列表
     userAnswer: [], // 答题结果
     userAnswered: 0, // 已答题数量
     timeLeft: 60, // 答题时间(单位: 分)
     formatLeftTime: '',
     timesUp: false, // 是否结束
     loading: false, // 加载
+    currentQuestion: {},
+    currentIndex: 0
   },
   onLoad: function () {
-    this.setLeftTime()
+    // this.setLeftTime()
+    // this.setData({
+    //   currentQuestion: this.data.questionArr[0]
+    // })
+    this.getQuestion()
   },
 
   // 倒计时计时器
@@ -188,6 +194,17 @@ Page({
         showSuccess: true,
         loading: false
       })
+    })
+  },
+
+  getQuestion:function(){
+    const candidateId = app.globalData.userInfo.id
+    const sysUserId = '2'
+    http('/app/applets/exam', 'POST', {
+      candidateId,
+      sysUserId
+    }).then(res => {
+      console.log(res)
     })
   }
 })

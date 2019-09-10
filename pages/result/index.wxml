@@ -1,0 +1,13 @@
+<!--components/success/success.wxml-->
+<view class="success">
+  <view class="bg-container">
+    <image mode="widthFix" class="bg" src="../../assets/success_bg.jpg"></image>
+    <view class="info">
+      <view class="title">{{title}}</view>
+      <view class="tips">{{tips}}</view>
+    </view>
+  </view>
+  <view class="btn-box" wx:if="{{showBtn}}">
+    <button class="user-button" bindtap="handleSubmit">{{btnText}}</button>
+  </view>
+</view>

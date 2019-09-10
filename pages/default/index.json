@@ -1,8 +1,5 @@
 {
-  "navigationBarTitleText": "怡泰祥",
-  "usingComponents": {
-    "van-button": "/dist/button/index"
-  },
+  "navigationBarTitleText": "电力招聘小助手",
   "navigationBarBackgroundColor": "#24221F",
   "navigationBarTextStyle": "white"
 }
