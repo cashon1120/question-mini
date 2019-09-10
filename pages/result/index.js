@@ -25,7 +25,7 @@ Page({
     }else{
       this.setData({
         title: '等待审核',
-        tips: '审核通过后可开始答题',
+        tips: '',
         btnText: '刷新',
         showBtn:true
       })

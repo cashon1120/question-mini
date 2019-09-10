@@ -50,7 +50,7 @@ App({
 
   globalData: {
     resultType: 2,
-    open_id: '123456788234823782342347234234',
+    open_id: '12345678123231a234234qwerqr2',
     userInfo: {
       id: ''
     },

@@ -1,5 +1,5 @@
 <wxs module="showLetter" src="../../utils/showLetter.wxs"></wxs>
-<view>
+<view wx:if="{{canTest}}">
   <view class="bg">
     <image src="../../assets/question_bg.jpg" mode="widthFix"></image>
   </view>
@@ -8,60 +8,31 @@
 
     <view class="flex-container top">
       <view class="flex-1">
-        <a class="user-button top-btn">上一题</a>
+        <a class="user-button top-btn"  bindtap="preQuestion">上一题</a>
       </view>
       <view style="text-align: right;">{{formatLeftTime}}
-        <view>{{currentQuestion.type ? '多选题' : '单选题'}}</view>
+        <view>{{questionArr[currentIndex].question.is_multiple_selection ===  1 ? '多选题' :  questionArr[currentIndex].question.is_multiple_selection ===  2 ? '单选题' : '判断题'}}</view>
       </view>
     </view>
     <view class="question">
       <view class="question-list">
-        <view class="title">【{{currentIndex}}/{{questionArr.length}}】{{currentQuestion.title}}</view>
+        <view class="title"><view>【{{currentIndex + 1}}/{{questionArr.length}}】{{questionArr[currentIndex].question.topic}}</view>
+        <view>{{questionArr[currentIndex].question.questions}}</view>
+        </view>
         <view class="answer">
-          <view wx:for="{{currentQuestion.answers}}" wx:for-index="index" wx:for-item="answers" wx:key="{{answers.id}}">
-            {{showLetter.format(index)}}.{{answers.value}}
+          <view wx:for="{{questionArr[currentIndex].optionArray}}" class="{{answers.selected ? 'active' : null}}" wx:for-index="index" wx:for-item="answers" wx:key="{{answers.id}}" data-id="{{answers.id}}" bindtap="selectAnswers">
+            {{answers.value}}
           </view>
         </view>
       </view>
-      <!-- <view class="question-list">
-      <view class="current">2/20 单选题</view>
-      <view class="title">为加强电力生产现场管理，规范（），保证人身电网和设备安全，依据国家有关法律、法规，结合电力生产的实际，制定了安全管理规定。</view>
-      <view class="answer">
-        <checkbox-group bindchange="checkboxChange">
-          <view>
-            <label class="radio">
-              <checkbox value="" />
-              A.各类工作人员的行为各类工作人员的行为各类工作人员的行为各类工作人员的行为
-            </label>
-          </view>
-          <view>
-            <label class="radio">
-              <checkbox value="" />
-              B.各类工作人员的行为各类工作人
-            </label>
-          </view>
-          <view>
-            <label class="radio">
-              <checkbox value="" />
-              C.各类工作人员的行为各类工
-            </label>
-          </view>
-          <view>
-            <label class="radio">
-              <checkbox value="" />
-              D.各类工作人员的行为各类工作
-            </label>
-          </view>
-        </checkbox-group>
-      </view>
-    </view> -->
     </view>
     <view class="btn-area">
-      <!-- <a>下一题</a>
-      <button bindtap="handleSubmit" class="user-button user-button-green" loading="{{loading}}" type="primary">提交</button> -->
-      <a class="user-button user-button-green submit">
+      <a wx:if="{{currentIndex < questionArr.length-1}}" bindtap="nextQuestion">下一题</a>
+      <a wx:if="{{currentIndex === questionArr.length-1 && !readyToSubmit}}" class="user-button user-button-green submit" bindtap="handleToSubmit">
         <image src="/assets/arrow_left.png" class="icon-arrow" mode="aspectFit" /> 交卷
       </a>
+      <button wx:if="{{readyToSubmit}}" bindtap="handleSubmit" class="user-button user-button-green" loading="{{loading}}" type="primary">提交</button>
+      
     </view>
   </view>
 </view>

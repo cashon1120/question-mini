@@ -10,6 +10,9 @@ function format(index) {
     case 2:
       letter = 'C'
       break;
+          case 2:
+      letter = 'C'
+      break;
     default:
       letter = 'D'
       break;

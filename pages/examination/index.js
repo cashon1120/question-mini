@@ -7,57 +7,18 @@ import {
 Page({
   data: {
     showSuccess: false, // 提交结果
-    // questionArr: [{
-    //   title: '为加强电力生产现场管理，规范（），保证人身电网和设备安全，依据国家有关法律、法规，结合电力生产的实际，制定了安全管理规定。',
-    //   id: 1,
-    //   answers: [{
-    //     id: 1,
-    //     value: '各类工作人员的行为'
-    //   }, {
-    //     id: 2,
-    //     value: '各类工作人员的行为'
-    //   }, {
-    //     id: 3,
-    //     value: '各类工作人员的行为'
-    //   }, {
-    //     id: 4,
-    //     value: '各类工作人员的行为'
-    //   }],
-    //   checked: [],
-    //   type: 0
-    // }, {
-    //   title: '这是一道多选题',
-    //   id: 2,
-    //   answers: [{
-    //     id: 1,
-    //     value: '各类工作人员的行为'
-    //   }, {
-    //     id: 2,
-    //     value: '各类工作人员的行为'
-    //   }, {
-    //     id: 3,
-    //     value: '各类工作人员的行为'
-    //   }, {
-    //     id: 4,
-    //     value: '各类工作人员的行为'
-    //   }],
-    //   checked: [],
-    //   type: 1
-    // }], // 题目列表
+    questionArr: [],
     userAnswer: [], // 答题结果
     userAnswered: 0, // 已答题数量
     timeLeft: 60, // 答题时间(单位: 分)
     formatLeftTime: '',
     timesUp: false, // 是否结束
     loading: false, // 加载
-    currentQuestion: {},
-    currentIndex: 0
+    currentIndex: 0,
+    readyToSubmit: false,
+    canTest: false
   },
   onLoad: function () {
-    // this.setLeftTime()
-    // this.setData({
-    //   currentQuestion: this.data.questionArr[0]
-    // })
     this.getQuestion()
   },
 
@@ -92,21 +53,102 @@ Page({
           timesUp: true
         })
         // 倒计时结束后自动提交成绩
-        this.uploadTest()
+        this.handleSubmit()
       }
     }, 1000);
   },
 
-  // 选中答案
-  selectChange: function (e) {
+  // 上一题
+  preQuestion: function () {
+    let {
+      currentIndex
+    } = this.data
+    currentIndex = Math.max(0, currentIndex - 1)
+    this.setData({
+      currentIndex
+    })
+  },
+
+  // 下一题
+  nextQuestion: function () {
+    let {
+      questionArr,
+      currentIndex
+    } = this.data
+    currentIndex = Math.min(questionArr.length - 1, currentIndex + 1)
+    this.setData({
+      currentIndex
+    })
+  },
+
+  // 获取题目
+  getQuestion: function () {
+    const candidateId = app.globalData.userInfo.id
+    // 暂时写死
+    const sysUserId = '2'
+    http('/app/applets/exam', 'POST', {
+      candidateId,
+      sysUserId
+    }).then(res => {
+        res.data.forEach(item => {
+          const question = item.optionArray
+          for (let i = 0; i < question.length; i += 1) {
+            const str = question[i].split('->')
+            question[i] = {
+              id: str[0],
+              value: str[1],
+              selected: false
+            }
+          }
+          item.optionArray = question
+        })
+        this.setData({
+          questionArr: res.data,
+          canTest: true
+        })
+        // 开始倒计时
+        this.setLeftTime()
+    })
+  },
+
+  // 选择答案
+  selectAnswers: function (e) {
     const {
-      id
-    } = e.target.dataset
+      questionArr,
+      currentIndex
+    } = this.data
+    const id = e.target.dataset.id
     const {
-      value
-    } = e.detail
+      is_multiple_selection
+    } = questionArr[currentIndex].question
+    questionArr[currentIndex].optionArray.forEach(item => {
+      // 单选/多选判断
+      if (is_multiple_selection === 1) {
+        if (item.id === id) {
+          if (!item.selected) {
+            item.selected = true
+          } else {
+            item.selected = false
+          }
+        }
+      } else {
+        if (item.id === id) {
+          item.selected = true
+        } else {
+          item.selected = false
+        }
+      }
+    })
+    this.setData({
+      questionArr
+    })
+  },
+
+
+  // 准备提交
+  handleToSubmit: function () {
     const {
-      userAnswer,
+      questionArr,
       timesUp
     } = this.data
     if (timesUp) {
@@ -116,95 +158,72 @@ Page({
       })
       return
     }
-    // hasObj 判断是否有当前答题数据, 有的话返回 对应索引: index
-    const index = hasObj(userAnswer, id)
-    if (index === false && index !== 0) {
-      userAnswer.push({
-        id,
-        value
+    let examVoList = []
+    let noAnswers = []
+    questionArr.forEach((item, index) => {
+      let selected = []
+      item.optionArray.forEach(option => {
+        if (option.selected) {
+          selected.push(option.id)
+        }
       })
-    } else {
-      userAnswer[index].value = value
-    }
-    this.setData({
-      userAnswer
-    }, () => {
-      this.setUserAnswered()
-    })
-  },
-
-  // 设置先答题结果
-  setUserAnswered: function () {
-    const {
-      userAnswer
-    } = this.data
-    let userAnswered = 0
-    userAnswer.forEach(item => {
-      // 多选答案结果是数组, 加判断是否有答案
-      if (typeof (item.value) === 'object') {
-        if (item.value.length > 0) {
-          userAnswered += 1
-        }
-      } else {
-        if (item.value) {
-          userAnswered += 1
-        }
+      if (selected.length === 0) {
+        noAnswers.push(index + 1)
       }
     })
-    this.setData({
-      userAnswered
-    })
-  },
 
-  // 提交答卷
-  handleSubmit: function () {
+    if (noAnswers.length > 0) {
+      wx.showToast({
+        icon: 'none',
+        title: `还有${noAnswers.length}道题目没答:(${noAnswers.join(',')})`
+      })
+      return
+    }
+
     const {
-      userAnswered,
-      questionArr,
-      timesUp,
+      readyToSubmit
     } = this.data
-    if (timesUp) {
-      wx.showToast({
-        icon: 'none',
-        title: '考试时间已结束, 不能答题!'
-      })
-      return
-    }
-    if (userAnswered < questionArr.length) {
-      wx.showToast({
-        icon: 'none',
-        title: `还有 ${questionArr.length-userAnswered} 题未做, 请核对`
-      })
-      return
-    }
     this.setData({
-      loading: true
+      readyToSubmit: !readyToSubmit
     })
-    this.uploadTest()
   },
 
   // 上传数据
-  uploadTest: function () {
+  handleSubmit: function () {
+    this.setData({
+      loading: true
+    })
     const {
-      userAnswer
+      questionArr
     } = this.data
-    http('user/additionalMaterials', 'POST', data).then(res => {
-      // 提交成功
-      this.setData({
-        showSuccess: true,
-        loading: false
+    let examVoList = []
+    questionArr.forEach(item => {
+      let selected = []
+      item.optionArray.forEach(option => {
+        if (option.selected) {
+          selected.push(option.id)
+        }
+      })
+      examVoList.push({
+        isMultipleSelection: item.question.is_multiple_selection,
+        questionId: item.question.id,
+        optionId: selected.join(','),
+        score: 0
       })
     })
-  },
-
-  getQuestion:function(){
-    const candidateId = app.globalData.userInfo.id
-    const sysUserId = '2'
-    http('/app/applets/exam', 'POST', {
-      candidateId,
-      sysUserId
-    }).then(res => {
-      console.log(res)
+    const jsonString = JSON.stringify({
+      examVoList,
+      score: 0,
+      sysUserId: 2,
+      candidateId: app.globalData.userInfo.id
+    })
+    http('/app/applets/finishUpJob', 'POST', {
+      jsonString: jsonString
+    }).then(() => {
+      app.globalData.resultType = 1
+      wx.navigateTo({
+        url: "/pages/result/index",
+      })
     })
   }
 })

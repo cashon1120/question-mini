@@ -69,7 +69,7 @@ Page({
 
   onLoad: function () {
     this.initValidate()
-    if(app.globalData.userInfo.id){
+    if (app.globalData.userInfo.id) {
       this.setData({
         hasUserInfo: true,
         canEdit: false,
@@ -224,12 +224,13 @@ Page({
   // 切换编辑状态
   handleEditStatus: function () {
     const {
-      canEdit, oldData
+      canEdit,
+      oldData
     } = this.data
     this.setData({
       canEdit: !canEdit
     }, () => {
-      if (!this.data.canEdit){
+      if (!this.data.canEdit) {
         this.setData({
           formData: JSON.parse(JSON.stringify(oldData))
         })
@@ -249,8 +250,8 @@ Page({
       })
       return false
     }
-    if (params.computer_level){
-      switch (params.computer_level){
+    if (params.computer_level) {
+      switch (params.computer_level) {
         case '一级':
           params.computer_level = 1
           break;
@@ -284,24 +285,17 @@ Page({
         companyArr: res.data
       })
       // 获取用户信息
-      if(app.globalData.userInfo.id){
-      http('/app/applets/findCandidateByOpenId', 'POST', {
-        open_id: app.globalData.open_id
-      }).then(res => {
-        this.setData({
-          loading: false
-        })
-        app.globalData.userInfo.id = res.data.id
-        this.handleSetShowModal()
+      if (!app.globalData.userInfo.id) {
+        http('/app/applets/findCandidateByOpenId', 'POST', {
+          open_id: app.globalData.open_id
+        }).then(res => {
+          this.setData({
+            loading: false
           })
-      }else{
-        this.setData({
-          loading: false
+          app.globalData.userInfo.id = res.data.id
+          this.handleSetShowModal()
         })
-        this.setData({
-          loading: false
-        })
-        app.globalData.userInfo.id = res.data.id
+      } else {
         this.handleSetShowModal()
       }
 
