@@ -85,10 +85,10 @@ Page({
   getQuestion: function () {
     const candidateId = app.globalData.userInfo.id
     // 暂时写死
-    const sysUserId = '2'
+    const staffId = app.globalData.params.staffId
     http('/app/applets/exam', 'POST', {
       candidateId,
-      sysUserId
+      staffId
     }).then(res => {
         res.data.forEach(item => {
           const question = item.optionArray
@@ -214,7 +214,7 @@ Page({
     const jsonString = JSON.stringify({
       examVoList,
       score: 0,
-      sysUserId: 2,
+      sysUserId: app.globalData.params.staffId,
       candidateId: app.globalData.userInfo.id
     })
     http('/app/applets/finishUpJob', 'POST', {

@@ -90,39 +90,40 @@ Page({
       sex: {
         required: true
       },
-      // birth_time: {
-      //   required: true
-      // },
-      // graduation_time: {
-      //   required: true
-      // },
+      birth_time: {
+        required: true
+      },
+      graduation_time: {
+        required: true
+      },
       // education: {
       //   required: true
       // },
-      // profession_name: {
-      //   required: true
-      // },
+      profession_name: {
+        required: true
+      },
       // profession_category: {
       //   required: true
       // },
-      // graduated_school: {
-      //   required: true
-      // },
+      graduated_school: {
+        required: true
+      },
       // school_category: {
       //   required: true
       // },
-      // address: {
-      //   required: true
-      // },
+      address: {
+        required: true
+      },
       // is_specialized: {
       //   required: true
       // },
-      // english_level: {
-      //   required: true
-      // },
-      // computer_level: {
-      //   required: true
-      // },
+      english_level: {
+        required: true
+      },
+      computer_level: {
+        required: true
+      },
+
     }
     const messages = {
       name: {
@@ -272,7 +273,7 @@ Page({
         open_id: app.globalData.open_id,
         id: app.globalData.userInfo.id || 0,
       },
-      staffId: 8
+      staffId: app.globalData.params.staffId
     }
 
     // 验证通过后显示选择公司模态框, 看是否要先提交个人信息再显示还是选完公司后一起提交
@@ -293,10 +294,10 @@ Page({
             loading: false
           })
           app.globalData.userInfo.id = res.data.id
-          this.handleSetShowModal()
+          this.handleSetSuccss()
         })
       } else {
-        this.handleSetShowModal()
+        this.handleSetSuccss()
       }
 
     }).catch(() => {

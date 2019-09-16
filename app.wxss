@@ -102,6 +102,7 @@ button{
 }
 .modal-main {
   padding: 30rpx 30rpx 0 30rpx;
+  max-height: 500rpx;
   overflow: auto;
 }
 
