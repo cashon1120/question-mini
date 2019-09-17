@@ -1,4 +1,41 @@
-input{
+page{
+  padding-top: 100rpx;
+}
+input {
   width: 100%;
-  padding: 20rpx 0
+  padding: 20rpx 0;
+}
+
+.tab {
+  text-align: center;
+  font-size: 32rpx;
+  background: #fff;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 0;
+  z-index: 999;
+}
+
+.tab a {
+  display: block;
+  padding: 25rpx;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.tab a.active {
+  color: #3191e9;
+  border-bottom: 1px solid #3191e9;
+}
+
+.no-data{
+  text-align: center;
+  color: #cbcbcb;
+  padding-top: 30rpx;
+}
+
+.company-group {
+  text-align: left;
+  padding: 25rpx 0;
+  border-bottom: 1px solid #ebebeb;
 }

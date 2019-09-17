@@ -1,5 +1,14 @@
 <!-- index.wxml -->
-<view class="container">
+<view class="flex-container tab">
+  <view class="flex-1">
+    <a bindtap="handleChangeTap" class="{{tapIndex === 0 ? 'active' : null}}" data-index="0">基本信息</a>
+  </view>
+  <view class="flex-1" wx:if="{{showCompany}}">
+    <a bindtap="handleChangeTap" class="{{tapIndex === 1 ? 'active' : null}}" data-index="1">已投递公司</a>
+  </view>
+</view>
+
+<view class="container" wx:if="{{tapIndex === 0}}">
   <view class="h1">
     <view class="btn-edit" wx:if="{{hasUserInfo}}" bindtap="handleEditStatus">{{canEdit ? '取消修改' : '修改'}}</view>
   </view>
@@ -16,12 +25,10 @@
         <view class="flex-1">
           <radio-group name="sex" class="radio-group" bindchange="bingInputChange" data-key="sex">
             <label class="radio">
-              <radio value="0" checked="{{formData.sex === '0' ? true : false}}" />
-              男
+              <radio value="0" checked="{{formData.sex == '0' ? true : false}}" /> 男
             </label>
             <label class="radio" style="margin-left: 20rpx;">
-              <radio value="1" checked="{{formData.sex === '1' ? true : false}}" />
-              女
+              <radio value="1" checked="{{formData.sex == '1' ? true : false}}" /> 女
             </label>
           </radio-group>
         </view>
@@ -83,7 +90,7 @@
       <view class="section">
         <view class="section__title">毕业院校:</view>
         <view class="flex-1">
-          <input name="graduated_school" placeholder="请输入毕业院校" value="{{formData.graduated_school}}" bindchange="bingInputChange" data-key="graduated_school"/>
+          <input name="graduated_school" placeholder="请输入毕业院校" value="{{formData.graduated_school}}" bindchange="bingInputChange" data-key="graduated_school" />
         </view>
       </view>
       <view class="section">
@@ -101,25 +108,25 @@
       <view class="section">
         <view class="section__title">生源地:</view>
         <view class="flex-1">
-          <input name="address" placeholder="请输入生源地" value="{{formData.address}}" bindchange="bingInputChange" data-key="address"/>
+          <input name="address" placeholder="请输入生源地" value="{{formData.address}}" bindchange="bingInputChange" data-key="address" />
         </view>
       </view>
       <view class="section">
         <view class="section__title">联系电话:</view>
         <view class="flex-1">
-          <input name="phone" placeholder="请输入联系电话" value="{{formData.phone}}" bindchange="bingInputChange" data-key="phone"/>
+          <input name="phone" placeholder="请输入联系电话" value="{{formData.phone}}" bindchange="bingInputChange" data-key="phone" />
         </view>
       </view>
       <view class="section">
         <view class="section__title">本科专业名称:</view>
         <view class="flex-1">
-          <input name="undergraduate_professional_name" placeholder="研究生填" value="{{formData.undergraduate_professional_name}}" bindchange="bingInputChange" data-key="undergraduate_professional_name"/>
+          <input name="undergraduate_professional_name" placeholder="研究生填" value="{{formData.undergraduate_professional_name}}" bindchange="bingInputChange" data-key="undergraduate_professional_name" />
         </view>
       </view>
       <view class="section">
         <view class="section__title">本科学校名称:</view>
         <view class="flex-1">
-          <input name="undergraduate_school_name" placeholder="研究生填" value="{{formData.undergraduate_school_name}}" bindchange="bingInputChange" data-key="undergraduate_school_name"/>
+          <input name="undergraduate_school_name" placeholder="研究生填" value="{{formData.undergraduate_school_name}}" bindchange="bingInputChange" data-key="undergraduate_school_name" />
         </view>
       </view>
       <view class="section">
@@ -139,12 +146,10 @@
         <view class="flex-1">
           <radio-group name="is_specialized" class="radio-group" bindchange="bingInputChange" data-key="is_specialized">
             <label class="radio">
-              <radio value="1" checked="{{formData.is_specialized === '1' ? true : false}}"/>
-              是
+              <radio value="1" checked="{{formData.is_specialized == '1' ? true : false}}" /> 是
             </label>
             <label class="radio" style="margin-left: 20rpx;">
-              <radio value="0" checked="{{formData.is_specialized === '0' ? true : false}}"/>
-              否
+              <radio value="0" checked="{{formData.is_specialized == '0' ? true : false}}" /> 否
             </label>
           </radio-group>
         </view>
@@ -154,12 +159,10 @@
         <view class="flex-1">
           <radio-group name="english_level" class="radio-group" bindchange="bingInputChange" data-key="english_level">
             <label class="radio">
-              <radio value="4" checked="{{formData.english_level === '4' ? true : false}}"/>
-              CET-4
+              <radio value="4" checked="{{formData.english_level == '4' ? true : false}}" /> CET-4
             </label>
             <label class="radio" style="margin-left: 20rpx;">
-              <radio value="6"  checked="{{formData.english_level === '6' ? true : false}}" />
-              CET-6
+              <radio value="6" checked="{{formData.english_level == '6' ? true : false}}" /> CET-6
             </label>
           </radio-group>
         </view>
@@ -179,45 +182,28 @@
       <view class="section">
         <view class="section__title">文体特长:</view>
         <view class="flex-1">
-          <input name="specialty" placeholder="文体特长(选填)" value="{{formData.specialty}}" bindchange="bingInputChange" data-key="specialty"/>
+          <input name="specialty" placeholder="文体特长(选填)" value="{{formData.specialty}}" bindchange="bingInputChange" data-key="specialty" />
         </view>
       </view>
       <view class="section">
         <view class="section__title">备注:</view>
         <view class="flex-1">
-          <input name="remark" placeholder="备注" value="{{formData.remark}}" bindchange="bingInputChange" data-key="remark"/>
+          <input name="remark" placeholder="备注" value="{{formData.remark}}" bindchange="bingInputChange" data-key="remark" />
         </view>
       </view>
       <view class="btn-area">
-        <button form-type="submit" loading="{{loading}}" disabled="{{loading}}" class="user-button">{{canEdit ? "保存" : '投递'}}</button>
+        <button form-type="submit" loading="{{loading}}" disabled="{{disabled}}" class="{{disabled ? 'user-button disabled-button' : 'user-button'}}">{{canEdit ? "保存" : '投递'}}</button>
       </view>
     </form>
     <view wx:if="{{!canEdit && hasUserInfo}}" class="form-disabled"></view>
   </view>
-  <!-- 选择公司 -->
-  <view class="modal" wx:if="{{showModal}}">
-    <view class="modal-content">
-      <view class="modal-title">
-        <view class="flex-container">
-          <view class="flex-1">投递单位</view>
-          <view class="tips">投递后无法取消</view>
-        </view>
-      </view>
-      <view class="modal-main">
-        <checkbox-group bindchange="checkboxChange">
-          <view class="company-group" wx:for="{{companyArr}}" wx:key="index">
-            {{item.company_name}}
-          </view>
-        </checkbox-group>
-      </view>
-      <view class="modal-bottom flex-container">
-        <view class="flex-1">
-          <a bindtap="handleSetShowModal">取消</a>
-        </view>
-        <view class="flex-1">
-          <a bindtap="handleSubmitSelectCompany" disabled="{{loading}}">确认投递</a>
-        </view>
-      </view>
+</view>
+
+<view class="container" wx:if="{{tapIndex === 1}}">
+  <view class="no-data" wx:if="{{companyArr.length === 0}}">暂无记录</view>
+  <view wx:else>
+    <view class="company-group" wx:for="{{companyArr}}" wx:key="index">
+      {{item.companyName}}
     </view>
   </view>
 </view>

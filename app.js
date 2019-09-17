@@ -18,59 +18,71 @@ App({
             self.globalData.open_id = JSON.parse(res.data).openid
 
             // 获取用户信息
-            http('/app/applets/findCandidateByOpenId', 'POST', {
-              open_id: self.globalData.open_id
-            }).then(res => {
-              if (res.data) {
-                if (res.data.computer_level) {
-                  switch (res.data.computer_level) {
-                    case 1:
-                      res.data.computer_level = '一级'
-                      break;
-                    case 2:
-                      res.data.computer_level = '二级'
-                      break;
-                    case 3:
-                      res.data.computer_level = '三级'
-                      break;
-                    case 4:
-                      res.data.computer_level = '四级'
-                      break;
-                  }
-                }
-                for (let key in res.data) {
-                  if (typeof(res.data[key]) === 'number') {
-                    res.data[key] = res.data[key].toString()
-                  }
-                }
-                self.globalData.userInfo = res.data
-              }
-
-              // 根据参数跳转不同的页面
-              if (self.globalData.params.type === '1') {
-                wx.navigateTo({
-                  url: "/pages/index/index"
-                })
-              }
-              if (self.globalData.params.type === '2') {
-                wx.navigateTo({
-                  url: "/pages/examination/index",
-                })
-              }
-            })
+            self.getUserInfo()
           })
         }
       })
     })
   },
 
+  getUserInfo(type) {
+    const self = this
+    http('/app/applets/findCandidateByOpenId', 'POST', {
+      open_id: self.globalData.open_id,
+      staffId: self.globalData.params.staffId
+    }).then(res => {
+      if (res.data) {
+        if (res.data.computer_level) {
+          switch (res.data.computer_level) {
+            case 1:
+              res.data.computer_level = '一级'
+              break;
+            case 2:
+              res.data.computer_level = '二级'
+              break;
+            case 3:
+              res.data.computer_level = '三级'
+              break;
+            case 4:
+              res.data.computer_level = '四级'
+              break;
+          }
+        }
+        for (let key in res.data) {
+          if (typeof(res.data[key]) === 'number') {
+            res.data[key] = res.data[key].toString()
+          }
+        }
+        self.globalData.userInfo = res.data.candidate
+        self.globalData.company = res.data.sysUserList
+        self.globalData.joinId = res.data.userId
+      }
+
+      if (type !== 1) {
+
+        // 根据参数跳转不同的页面
+        if (self.globalData.params.type === '1') {
+          wx.navigateTo({
+            url: "/pages/index/index"
+          })
+        }
+        if (self.globalData.params.type === '2') {
+          wx.navigateTo({
+            url: "/pages/examination/index",
+          })
+        }
+      }
+    })
+  },
+
   globalData: {
     params: {},
-    resultType: 2,
+    resultType: 0,
     open_id: '',
     userInfo: {
       id: ''
     },
+    company: [],
     code: '', // 微信登录code 
   },
 })

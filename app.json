@@ -1,9 +1,9 @@
 {
   "pages": [
-    "pages/default/index",
-    "pages/index/index",
+    "pages/result/index",
     "pages/examination/index",
-    "pages/result/index"
+    "pages/default/index",
+    "pages/index/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

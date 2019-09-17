@@ -30,10 +30,6 @@ const http = function (url, method, data, title = '加载中...') {
       success: function (res) {
         wx.hideLoading()
         if (!res.data.success) {
-          wx.showToast({
-            icon: 'none',
-            title: res.data.msg,
-          })
           reject(res.data)
         } else {
           resolve(res.data)

@@ -8,26 +8,44 @@ Page({
   data: {
     title: '',
     tips: '',
-    btnText: ''
+    btnText: '',
+    success: true
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
-    if (app.globalData.resultType === 1) {
+  onLoad: function(options) {
+    const resultType = app.globalData.resultType
+    if (resultType === 1) {
       this.setData({
         title: '考试结束',
-        tips: '审核通过后可开始答题',
-        btnText: '刷新页面',
-        showBtn:true
+        tips: '请等待考试结果',
+        btnText: '',
+        showBtn: false
       })
-    }else{
+    } else if (resultType === 2) {
       this.setData({
         title: '等待审核',
         tips: '',
-        btnText: '刷新',
-        showBtn:true
+        btnText: '返回',
+        showBtn: true
+      })
+    } else if (resultType == 3){
+      this.setData({
+        title: '等待审核',
+        tips: '个人资料审核未通过，无法参加考试',
+        btnText: '',
+        showBtn: false,
+        success: false
+      })
+    }else{
+      this.setData({
+        title: '禁止访问',
+        tips: '请通过扫描二维码进入系统',
+        btnText: '',
+        showBtn: false,
+        success: false
       })
     }
   },
@@ -35,49 +53,55 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function () {
+  onReady: function() {
 
+  },
+
+  handleSubmit: function() {
+    wx.navigateBack({
+      delta: 1,
+    })
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
+  onShow: function() {
 
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function () {
+  onHide: function() {
 
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () {
+  onUnload: function() {
 
   },
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh: function () {
+  onPullDownRefresh: function() {
 
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom: function () {
+  onReachBottom: function() {
 
   },
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  onShareAppMessage: function() {
 
   }
 })

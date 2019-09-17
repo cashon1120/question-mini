@@ -84,7 +84,6 @@ Page({
   // 获取题目
   getQuestion: function () {
     const candidateId = app.globalData.userInfo.id
-    // 暂时写死
     const staffId = app.globalData.params.staffId
     http('/app/applets/exam', 'POST', {
       candidateId,
@@ -108,6 +107,13 @@ Page({
         })
         // 开始倒计时
         this.setLeftTime()
+    }).catch(res => {
+      if(!res.success){
+        app.globalData.resultType = 3
+        wx.redirectTo({
+          url: "/pages/result/index",
+        })
+      }
     })
   },
 

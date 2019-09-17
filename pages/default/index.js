@@ -6,10 +6,10 @@ Page({
     isSet: true,
     userInfo: {},
     key: '',
-    value: ''
+    value: '',
+    test: ''
   },
   onLoad: function(options) {
-
     if (options.q) {
       const scene = decodeURIComponent(options.q)
       const arr = scene.split('?')
@@ -22,17 +22,22 @@ Page({
         staffId,
         type
       }
+    }else{
+      wx.showModal({
+        title: '系统提示',
+        content: '请扫二维码进入',
+      })
     }
 
     // 测试
     // app.globalData.params = {
-    //   staffId: 9,
-    //   type: '1'
+    //   staffId: 10,
+    //   type: '2'
     // }
 
     const that = this
     wx.getSetting({
-      success: function(res) {
+      success: function (res) {
         if (res.authSetting['scope.userInfo']) {
           app.getAuthKey().then(res => {
             wx.switchTab({
@@ -41,11 +46,13 @@ Page({
           })
         }
       },
-      fail: function(res) {
+      fail: function (res) {
         console.log(res)
         that.isSet = false
       }
     })
+
+   
   },
 
   bindGetUserInfo: function(e) {

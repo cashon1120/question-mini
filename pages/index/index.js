@@ -5,6 +5,8 @@ const app = getApp()
 
 Page({
   data: {
+    showCompany: false,
+    disabled: false,
     formData: {
       name: '',
       sex: '',
@@ -17,6 +19,7 @@ Page({
       is_specialized: '',
       english_level: ''
     }, // 表单数据
+    tapIndex: 0,
     loading: false, // 加载
     educationArr: ['博士研究生', '硕士研究生', '大学本科', '大学专科'],
     majorArr: ['电工类', '电子信息类', '其它工学类', '大学金融财务类', '管理类', '其他'],
@@ -38,27 +41,7 @@ Page({
       id: 4,
       value: '四级'
     }],
-    companyArr: [{
-        name: '四川省公司',
-        value: '1'
-      },
-      {
-        name: '乐山公司',
-        value: '2'
-      },
-      {
-        name: '绵阳公司',
-        value: '3'
-      },
-      {
-        name: '内江公司',
-        value: '4'
-      },
-      {
-        name: '成功公司',
-        value: '5'
-      }
-    ], // 公司列表
+    companyArr: [], // 公司列表
     showModal: false, // 显示投递公司模态框
     showSuccess: false, // 显示成功界面
     canEdit: false, // 是否可编辑
@@ -67,19 +50,21 @@ Page({
     oldData: {}
   },
 
-  onLoad: function () {
+  onLoad: function() {
     this.initValidate()
-    if (app.globalData.userInfo.id) {
-      this.setData({
-        hasUserInfo: true,
-        canEdit: false,
-        formData: app.globalData.userInfo,
-        oldData: JSON.parse(JSON.stringify(app.globalData.userInfo))
-      }, () => {
-        console.log(this.data.hasUserInfo)
-      })
-    }
   },
+
+  hasStaffId: function(staffId) {
+    const companyList = app.globalData.company
+    let exist = false
+    companyList.forEach(item => {
+      if (item.sysUserId == staffId) {
+        exist = true
+      }
+    })
+    return exist
+  },
+
   // 初始化表单验证
   initValidate() {
     const rules = {
@@ -170,8 +155,34 @@ Page({
     this.WxValidate = new WxValidate(rules, messages)
   },
 
+  onShow() {
+    if (app.globalData.userInfo.id) {
+      this.setData({
+        hasUserInfo: true,
+        canEdit: false,
+        formData: app.globalData.userInfo,
+        oldData: JSON.parse(JSON.stringify(app.globalData.userInfo))
+      })
+      this.handleSubmitSelectCompany
+    }
+
+    const joinId = app.globalData.joinId
+    if (!this.hasStaffId(joinId)) {
+      this.setData({
+        showCompany: true,
+        disabled: false,
+        companyArr: app.globalData.company
+      })
+    } else {
+      this.setData({
+        showCompany: false,
+        disabled: true
+      })
+    }
+  },
+
   // 输入框事件
-  bingInputChange: function (e) {
+  bingInputChange: function(e) {
     const {
       key
     } = e.target.dataset
@@ -185,7 +196,7 @@ Page({
   },
 
   //  普通选择事件
-  bindPickerChange: function (e) {
+  bindPickerChange: function(e) {
     const {
       key
     } = e.target.dataset
@@ -223,13 +234,15 @@ Page({
   },
 
   // 切换编辑状态
-  handleEditStatus: function () {
+  handleEditStatus: function() {
     const {
       canEdit,
-      oldData
+      oldData,
+      disabled
     } = this.data
     this.setData({
-      canEdit: !canEdit
+      canEdit: !canEdit,
+      disabled: !disabled
     }, () => {
       if (!this.data.canEdit) {
         this.setData({
@@ -240,7 +253,7 @@ Page({
   },
 
   // 提交表单
-  formSubmit: function (e) {
+  formSubmit: function(e) {
     const params = e.detail.value
     //校验表单
     if (!this.WxValidate.checkForm(params)) {
@@ -276,6 +289,8 @@ Page({
       staffId: app.globalData.params.staffId
     }
 
+
+
     // 验证通过后显示选择公司模态框, 看是否要先提交个人信息再显示还是选完公司后一起提交
     // this.setData({
     //   loading: true
@@ -283,22 +298,11 @@ Page({
     // this.handleSetShowModal()
     http('/app/applets/addAndGetList', 'POST', data).then(res => {
       this.setData({
-        companyArr: res.data
+        companyArr: res.data,
+        canEdit: false
       })
-      // 获取用户信息
-      if (!app.globalData.userInfo.id) {
-        http('/app/applets/findCandidateByOpenId', 'POST', {
-          open_id: app.globalData.open_id
-        }).then(res => {
-          this.setData({
-            loading: false
-          })
-          app.globalData.userInfo.id = res.data.id
-          this.handleSetSuccss()
-        })
-      } else {
-        this.handleSetSuccss()
-      }
+      app.getUserInfo(1)
+      this.handleSetSuccss()
 
     }).catch(() => {
       this.setData({
@@ -308,7 +312,7 @@ Page({
   },
 
   // 显示投递弹窗
-  handleSetShowModal: function () {
+  handleSetShowModal: function() {
     const {
       showModal
     } = this.data
@@ -318,7 +322,7 @@ Page({
   },
 
   // 投递公司
-  handleSubmitSelectCompany: function () {
+  handleSubmitSelectCompany: function() {
     const {
       userId
     } = this.data
@@ -339,10 +343,18 @@ Page({
   },
 
   // 投递成功
-  handleSetSuccss: function () {
+  handleSetSuccss: function() {
     app.globalData.resultType = 2
     wx.navigateTo({
       url: "/pages/result/index",
+    })
+  },
+
+  // 切换显示内容
+  handleChangeTap: function(e) {
+    const tapIndex = parseInt(e.target.dataset.index)
+    this.setData({
+      tapIndex
     })
   }
 

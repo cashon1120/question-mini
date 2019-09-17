@@ -1,7 +1,8 @@
 <!--components/success/success.wxml-->
 <view class="success">
   <view class="bg-container">
-    <image mode="widthFix" class="bg" src="../../assets/success_bg.jpg"></image>
+    <image wx:if="{{success}}" mode="widthFix" class="bg" src="../../assets/success_bg.jpg"></image>
+    <image wx:else mode="widthFix" class="bg" src="../../assets/warning_bg.jpg"></image>
     <view class="info">
       <view class="title">{{title}}</view>
       <view class="tips">{{tips}}</view>
