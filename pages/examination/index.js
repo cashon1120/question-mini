@@ -109,9 +109,12 @@ Page({
         this.setLeftTime()
     }).catch(res => {
       if(!res.success){
-        app.globalData.resultType = 3
-        wx.redirectTo({
-          url: "/pages/result/index",
+        app.setResultParams({
+          title: '操作失败',
+          tips: res.msg,
+          btnText: '返回',
+          showBtn: false,
+          success: false
         })
       }
     })
@@ -226,9 +229,11 @@ Page({
     http('/app/applets/finishUpJob', 'POST', {
       jsonString: jsonString
     }).then(() => {
-      app.globalData.resultType = 1
-      wx.navigateTo({
-        url: "/pages/result/index",
+      app.setResultParams({
+        title: '考试结束',
+        tips: '请等待考试结果',
+        showBtn: false,
+        success: true
       })
     })
   }

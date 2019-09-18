@@ -16,7 +16,6 @@ App({
           }).then(res => {
             //console.log(JSON.parse(res.data))
             self.globalData.open_id = JSON.parse(res.data).openid
-
             // 获取用户信息
             self.getUserInfo()
           })
@@ -25,26 +24,27 @@ App({
     })
   },
 
+  // type 不为 1 的时候代表扫码进来, 需要跳转
   getUserInfo(type) {
     const self = this
     http('/app/applets/findCandidateByOpenId', 'POST', {
       open_id: self.globalData.open_id,
       staffId: self.globalData.params.staffId
     }).then(res => {
-      if (res.data) {
-        if (res.data.computer_level) {
-          switch (res.data.computer_level) {
+      if (res.data.candidate) {
+        if (res.data.candidate.computer_level) {
+          switch (res.data.candidate.computer_level) {
             case 1:
-              res.data.computer_level = '一级'
+              res.data.candidate.computer_level = '一级'
               break;
             case 2:
-              res.data.computer_level = '二级'
+              res.data.candidate.computer_level = '二级'
               break;
             case 3:
-              res.data.computer_level = '三级'
+              res.data.candidate.computer_level = '三级'
               break;
             case 4:
-              res.data.computer_level = '四级'
+              res.data.candidate.computer_level = '四级'
               break;
           }
         }
@@ -75,9 +75,23 @@ App({
     })
   },
 
+  setResultParams(params) {
+    const resultParams = {
+      title: '系统提示',
+      success: false,
+      showBtn: true,
+      ...params
+    }
+    this.globalData.resultParams = resultParams
+    wx.navigateTo({
+      url: "/pages/result/index"
+    })
+  },
+
   globalData: {
     params: {},
     resultType: 0,
+    resultParams: {},
     open_id: '',
     userInfo: {
       id: ''

@@ -7,7 +7,6 @@ Page({
     userInfo: {},
     key: '',
     value: '',
-    test: ''
   },
   onLoad: function(options) {
     if (options.q) {
@@ -31,7 +30,7 @@ Page({
 
     // 测试
     // app.globalData.params = {
-    //   staffId: 10,
+    //   staffId: 13,
     //   type: '2'
     // }
 
@@ -51,8 +50,6 @@ Page({
         that.isSet = false
       }
     })
-
-   
   },
 
   bindGetUserInfo: function(e) {

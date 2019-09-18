@@ -3,6 +3,11 @@
     <open-data type="userAvatarUrl"></open-data>
   </view>
   <view class="title">登录电力招聘考试小助手</view>
+  <view class="index_tips">
+    注: 仅限电力部门人才招聘使用, 主要提供资料录入功能.
+    <view></view>
+  </view>
+  
   <button v-if="{{canIUser}}" type="primary" class="user-button" bindgetuserinfo="bindGetUserInfo" open-type="getUserInfo">
     确认授权
   </button>

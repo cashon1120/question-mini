@@ -9,8 +9,8 @@
 </view>
 
 <view class="container" wx:if="{{tapIndex === 0}}">
-  <view class="h1">
-    <view class="btn-edit" wx:if="{{hasUserInfo}}" bindtap="handleEditStatus">{{canEdit ? '取消修改' : '修改'}}</view>
+  <view class="h1" wx:if="{{hasUserInfo}}">
+    <view class="btn-edit" bindtap="handleEditStatus">{{canEdit ? '取消修改' : '修改资料'}}</view>
   </view>
   <view class="form-container">
     <form bindsubmit="formSubmit" bindreset="formReset">
@@ -192,7 +192,7 @@
         </view>
       </view>
       <view class="btn-area">
-        <button form-type="submit" loading="{{loading}}" disabled="{{disabled}}" class="{{disabled ? 'user-button disabled-button' : 'user-button'}}">{{canEdit ? "保存" : '投递'}}</button>
+        <button form-type="submit" loading="{{loading}}" disabled="{{disabled}}" class="{{disabled ? 'user-button disabled-button' : 'user-button'}}">{{hasJoin ? "保存" : '投递'}}</button>
       </view>
     </form>
     <view wx:if="{{!canEdit && hasUserInfo}}" class="form-disabled"></view>

@@ -47,14 +47,15 @@ Page({
     canEdit: false, // 是否可编辑
     selectedCompany: [], // 已先公司列表
     hasUserInfo: false,
+    hasJoin: false,
     oldData: {}
   },
 
-  onLoad: function() {
+  onLoad: function () {
     this.initValidate()
   },
 
-  hasStaffId: function(staffId) {
+  hasStaffId: function (staffId) {
     const companyList = app.globalData.company
     let exist = false
     companyList.forEach(item => {
@@ -171,10 +172,12 @@ Page({
       this.setData({
         showCompany: true,
         disabled: false,
+        hasJoin: false,
         companyArr: app.globalData.company
       })
     } else {
       this.setData({
+        hasJoin: true,
         showCompany: false,
         disabled: true
       })
@@ -182,7 +185,7 @@ Page({
   },
 
   // 输入框事件
-  bingInputChange: function(e) {
+  bingInputChange: function (e) {
     const {
       key
     } = e.target.dataset
@@ -196,7 +199,7 @@ Page({
   },
 
   //  普通选择事件
-  bindPickerChange: function(e) {
+  bindPickerChange: function (e) {
     const {
       key
     } = e.target.dataset
@@ -234,15 +237,15 @@ Page({
   },
 
   // 切换编辑状态
-  handleEditStatus: function() {
+  handleEditStatus: function () {
     const {
       canEdit,
       oldData,
-      disabled
+      hasJoin
     } = this.data
     this.setData({
       canEdit: !canEdit,
-      disabled: !disabled
+      disabled: !hasJoin ? false : canEdit
     }, () => {
       if (!this.data.canEdit) {
         this.setData({
@@ -253,7 +256,7 @@ Page({
   },
 
   // 提交表单
-  formSubmit: function(e) {
+  formSubmit: function (e) {
     const params = e.detail.value
     //校验表单
     if (!this.WxValidate.checkForm(params)) {
@@ -296,6 +299,38 @@ Page({
     //   loading: true
     // })
     // this.handleSetShowModal()
+
+    const {
+      hasJoin
+    } = this.data
+    if (hasJoin) {
+      delete data.staffId
+      http('/app/applets/updCandidate', 'POST', data).then(res => {
+        this.setData({
+          loading: false,
+          disabled: true,
+          canEdit: false
+        })
+        app.setResultParams({
+          title: '修改成功',
+          btnText: '返回',
+          showBtn: true,
+          success: true
+        })
+        app.getUserInfo(1)
+      }).catch((res) => {
+        wx.showToast({
+          title: res.msg,
+          icon: 'none',
+          duration: 2000
+        })
+        this.setData({
+          loading: false
+        })
+      })
+      return
+    }
+
     http('/app/applets/addAndGetList', 'POST', data).then(res => {
       this.setData({
         companyArr: res.data,
@@ -303,8 +338,12 @@ Page({
       })
       app.getUserInfo(1)
       this.handleSetSuccss()
-
-    }).catch(() => {
+    }).catch((res) => {
+      wx.showToast({
+        title: res.msg,
+        icon: 'none',
+        duration: 2000
+      })
       this.setData({
         loading: false
       })
@@ -312,7 +351,7 @@ Page({
   },
 
   // 显示投递弹窗
-  handleSetShowModal: function() {
+  handleSetShowModal: function () {
     const {
       showModal
     } = this.data
@@ -322,7 +361,7 @@ Page({
   },
 
   // 投递公司
-  handleSubmitSelectCompany: function() {
+  handleSubmitSelectCompany: function () {
     const {
       userId
     } = this.data
@@ -343,15 +382,18 @@ Page({
   },
 
   // 投递成功
-  handleSetSuccss: function() {
-    app.globalData.resultType = 2
-    wx.navigateTo({
-      url: "/pages/result/index",
+  handleSetSuccss: function () {
+    app.setResultParams({
+      title: '投递成功',
+      tips: '资料已投递, 请等待审核',
+      btnText: '返回',
+      showBtn: true,
+      success: true
     })
   },
 
   // 切换显示内容
-  handleChangeTap: function(e) {
+  handleChangeTap: function (e) {
     const tapIndex = parseInt(e.target.dataset.index)
     this.setData({
       tapIndex

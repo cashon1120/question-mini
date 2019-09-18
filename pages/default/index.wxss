@@ -12,5 +12,10 @@
 }
 
 .title{
-  padding-bottom: 80rpx;
+  padding-bottom: 40rpx;
+}
+.index_tips{
+  font-size: 26rpx;
+  padding-bottom: 50rpx;
+  color: #4db24f;
 }
