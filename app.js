@@ -5,9 +5,9 @@ App({
   stopScroll() {},
 
   // 登录
-  getAuthKey: function() {
+  getAuthKey: function () {
     const self = this
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       wx.login({
         success: res => {
           // 获取OpenId
@@ -17,7 +17,7 @@ App({
             //console.log(JSON.parse(res.data))
             self.globalData.open_id = JSON.parse(res.data).openid
             // 获取用户信息
-            self.getUserInfo()
+            self.getEnterType()
           })
         }
       })
@@ -49,7 +49,7 @@ App({
           }
         }
         for (let key in res.data) {
-          if (typeof(res.data[key]) === 'number') {
+          if (typeof (res.data[key]) === 'number') {
             res.data[key] = res.data[key].toString()
           }
         }
@@ -58,8 +58,16 @@ App({
         self.globalData.joinId = res.data.userId
       }
 
-      if (type !== 1) {
+      if (self.globalData.enterByCode === '1' && !self.globalData.params.type) {
+        self.globalData.params.staffId = 9999
+        wx.navigateTo({
+          url: "/pages/index/index"
+        })
+        return
+      }
 
+      // 扫码进入
+      if (type !== 1) {
         // 根据参数跳转不同的页面
         if (self.globalData.params.type === '1') {
           wx.navigateTo({
@@ -71,6 +79,7 @@ App({
             url: "/pages/examination/index",
           })
         }
+        return
       }
     })
   },
@@ -80,15 +89,31 @@ App({
       title: '系统提示',
       success: false,
       showBtn: true,
+      redirect: false,
       ...params
     }
+    console.log(resultParams)
     this.globalData.resultParams = resultParams
-    wx.navigateTo({
-      url: "/pages/result/index"
+    if (resultParams.redirect) {
+      wx.redirectTo({
+        url: "/pages/result/index"
+      })
+    } else {
+      wx.navigateTo({
+        url: "/pages/result/index"
+      })
+    }
+  },
+
+  getEnterType: function () {
+    http('/app/applets/smJoin', 'POST').then(res => {
+      this.globalData.enterByCode = res.data.value
+      this.getUserInfo()
     })
   },
 
   globalData: {
+    enterByCode: '',
     params: {},
     resultType: 0,
     resultParams: {},

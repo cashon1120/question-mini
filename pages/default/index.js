@@ -21,17 +21,12 @@ Page({
         staffId,
         type
       }
-    }else{
-      wx.showModal({
-        title: '系统提示',
-        content: '请扫二维码进入',
-      })
     }
 
     // 测试
     // app.globalData.params = {
-    //   staffId: 13,
-    //   type: '2'
+    //   staffId: 12,
+    //   type: '1'
     // }
 
     const that = this

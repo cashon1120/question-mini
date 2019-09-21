@@ -90,3 +90,28 @@ page{
   margin-top: -14rpx;
 }
 
+.no-checked{
+  width: 100%;
+  z-index: 999;
+}
+.no-checked view{
+  display: inline-block;
+  color: #fff;
+  border: 1px solid #fff;
+  text-align: center;
+  line-height: 60rpx;
+  margin-left: 20rpx;
+  width: 60rpx;
+  height: 60rpx;
+  margin-bottom: 20rpx;
+}
+
+.no-checked-title{
+  display: block;
+  padding-left: 20rpx;
+  border: 0;
+  height: auto;
+  width: auto;
+  margin: 20rpx 0;
+  color: #fff;
+}

@@ -10,13 +10,15 @@ Page({
     questionArr: [],
     userAnswer: [], // 答题结果
     userAnswered: 0, // 已答题数量
-    timeLeft: 60, // 答题时间(单位: 分)
+    timeLeft: 0, // 答题时间(单位: 分)
     formatLeftTime: '',
     timesUp: false, // 是否结束
     loading: false, // 加载
     currentIndex: 0,
     readyToSubmit: false,
-    canTest: false
+    canTest: false,
+    firstSubmit: false,
+    noCheckedQuestion: []
   },
   onLoad: function () {
     this.getQuestion()
@@ -24,6 +26,7 @@ Page({
 
   // 倒计时计时器
   setLeftTime() {
+
     let {
       timeLeft
     } = this.data
@@ -89,7 +92,7 @@ Page({
       candidateId,
       staffId
     }).then(res => {
-        res.data.forEach(item => {
+        res.data.questionsAndAnswerList.forEach(item => {
           const question = item.optionArray
           for (let i = 0; i < question.length; i += 1) {
             const str = question[i].split('->')
@@ -102,7 +105,8 @@ Page({
           item.optionArray = question
         })
         this.setData({
-          questionArr: res.data,
+          timeLeft: res.data.answerTime,
+          questionArr: res.data.questionsAndAnswerList,
           canTest: true
         })
         // 开始倒计时
@@ -114,7 +118,8 @@ Page({
           tips: res.msg,
           btnText: '返回',
           showBtn: false,
-          success: false
+          success: false,
+          redirect: true
         })
       }
     })
@@ -124,7 +129,8 @@ Page({
   selectAnswers: function (e) {
     const {
       questionArr,
-      currentIndex
+      currentIndex,
+      noCheckedQuestion
     } = this.data
     const id = e.target.dataset.id
     const {
@@ -148,8 +154,16 @@ Page({
         }
       }
     })
+    if(noCheckedQuestion.length > 0){
+      noCheckedQuestion.forEach((item, index) => {
+        if(item - 1 === currentIndex){
+          noCheckedQuestion.splice(index, 1)
+        }
+      })
+    }
     this.setData({
-      questionArr
+      questionArr,
+      noCheckedQuestion
     })
   },
 
@@ -186,14 +200,27 @@ Page({
         icon: 'none',
         title: `还有${noAnswers.length}道题目没答:(${noAnswers.join(',')})`
       })
+      this.setData({
+        firstSubmit: true,
+        noCheckedQuestion: noAnswers
+      })
       return
     }
-
+    this.setData({
+      firstSubmit: false,
+    })
     const {
       readyToSubmit
     } = this.data
     this.setData({
       readyToSubmit: !readyToSubmit
+    })
+  },
+
+  showQuestion: function(e){
+    const {index} = e.target.dataset
+    this.setData({
+      currentIndex: parseInt(index) - 1
     })
   },
 
@@ -233,7 +260,8 @@ Page({
         title: '考试结束',
         tips: '请等待考试结果',
         showBtn: false,
-        success: true
+        success: true,
+        redirect: true
       })
     })
   }

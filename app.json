@@ -1,14 +1,14 @@
 {
   "pages": [
+    "pages/default/index",
     "pages/result/index",
     "pages/examination/index",
-    "pages/default/index",
     "pages/index/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#1b1b1b",
-    "navigationBarTitleText": "电Î力招聘考试小助手",
+    "navigationBarTitleText": "电力招聘考试小助手",
     "navigationBarTextStyle": "white",
     "enablePullDownRefresh": false
   },
