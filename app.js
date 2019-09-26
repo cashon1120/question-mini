@@ -5,9 +5,9 @@ App({
   stopScroll() {},
 
   // 登录
-  getAuthKey: function () {
+  getAuthKey: function() {
     const self = this
-    return new Promise(function (resolve, reject) {
+    return new Promise(function(resolve, reject) {
       wx.login({
         success: res => {
           // 获取OpenId
@@ -49,12 +49,15 @@ App({
           }
         }
         for (let key in res.data) {
-          if (typeof (res.data[key]) === 'number') {
+          if (typeof(res.data[key]) === 'number') {
             res.data[key] = res.data[key].toString()
           }
         }
         self.globalData.userInfo = res.data.candidate
-        self.globalData.company = res.data.sysUserList
+        console.log(Array.isArray(res.data.sysUserList))
+        if (Array.isArray(res.data.sysUserList)) {
+          self.globalData.company = res.data.sysUserList
+        }
         self.globalData.joinId = res.data.userId
       }
 
@@ -81,6 +84,11 @@ App({
         }
         return
       }
+    }).catch(res => {
+      wx.showToast({
+        icon: 'none',
+        title: res.msg || '出错啦'
+      })
     })
   },
 
@@ -105,7 +113,7 @@ App({
     }
   },
 
-  getEnterType: function () {
+  getEnterType: function() {
     http('/app/applets/smJoin', 'POST').then(res => {
       this.globalData.enterByCode = res.data.value
       this.getUserInfo()

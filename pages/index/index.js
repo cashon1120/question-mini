@@ -56,6 +56,7 @@ Page({
   },
 
   hasStaffId: function (staffId) {
+   
     const companyList = app.globalData.company
     let exist = false
     companyList.forEach(item => {
@@ -168,20 +169,12 @@ Page({
     }
 
     const joinId = app.globalData.joinId
-    if (!this.hasStaffId(joinId)) {
-      this.setData({
-        showCompany: true,
-        disabled: false,
-        hasJoin: false,
-        companyArr: app.globalData.company
-      })
-    } else {
-      this.setData({
-        hasJoin: true,
-        showCompany: false,
-        disabled: true
-      })
-    }
+    this.setData({
+      showCompany: true,
+      disabled: false,
+      hasJoin: false,
+      companyArr: app.globalData.company
+    })
   },
 
   // 输入框事件

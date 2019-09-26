@@ -24,10 +24,10 @@ Page({
     }
 
     // 测试
-    // app.globalData.params = {
-    //   staffId: 12,
-    //   type: '1'
-    // }
+    app.globalData.params = {
+      staffId: 10,
+      type: '1'
+    }
 
     const that = this
     wx.getSetting({

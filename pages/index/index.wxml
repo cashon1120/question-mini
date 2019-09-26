@@ -3,15 +3,15 @@
   <view class="flex-1">
     <a bindtap="handleChangeTap" class="{{tapIndex === 0 ? 'active' : null}}" data-index="0">基本信息</a>
   </view>
-  <view class="flex-1" wx:if="{{showCompany}}">
+  <view class="flex-1">
     <a bindtap="handleChangeTap" class="{{tapIndex === 1 ? 'active' : null}}" data-index="1">已投递公司</a>
   </view>
 </view>
 
 <view class="container" wx:if="{{tapIndex === 0}}">
-  <view class="h1" wx:if="{{hasUserInfo}}">
+  <!-- <view class="h1" wx:if="{{hasUserInfo}}">
     <view class="btn-edit" bindtap="handleEditStatus">{{canEdit ? '取消修改' : '修改资料'}}</view>
-  </view>
+  </view> -->
   <view class="form-container">
     <form bindsubmit="formSubmit" bindreset="formReset">
       <view class="section" style="border-top: 1px solid #ebebeb;">
@@ -192,10 +192,10 @@
         </view>
       </view>
       <view class="btn-area">
-        <button form-type="submit" loading="{{loading}}" disabled="{{disabled}}" class="{{disabled ? 'user-button disabled-button' : 'user-button'}}">{{hasJoin ? "保存" : '投递'}}</button>
+        <button form-type="submit" loading="{{loading}}"  class="user-button">{{hasJoin ? "保存修改" : '投递'}}</button>
       </view>
     </form>
-    <view wx:if="{{!canEdit && hasUserInfo}}" class="form-disabled"></view>
+    <!-- <view wx:if="{{!canEdit && hasUserInfo}}" class="form-disabled"></view> -->
   </view>
 </view>
 
