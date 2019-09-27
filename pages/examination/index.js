@@ -1,9 +1,6 @@
 // pages/default/index.js
 import http from '../../utils/http.js'
 const app = getApp()
-import {
-  hasObj
-} from '../../utils/util.js'
 Page({
   data: {
     showSuccess: false, // 提交结果
@@ -21,6 +18,12 @@ Page({
     noCheckedQuestion: []
   },
   onLoad: function () {
+    if (app.globalData.enterError){
+      wx.showToast({
+        icon: 'none',
+        title: app.globalData.enterError
+      })
+    }
     this.getQuestion()
   },
 

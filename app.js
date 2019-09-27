@@ -5,9 +5,9 @@ App({
   stopScroll() {},
 
   // 登录
-  getAuthKey: function() {
+  getAuthKey: function () {
     const self = this
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
       wx.login({
         success: res => {
           // 获取OpenId
@@ -24,13 +24,14 @@ App({
     })
   },
 
-  // type 不为 1 的时候代表扫码进来, 需要跳转
-  getUserInfo(type) {
+  getUserInfo(firstEnter) {
     const self = this
+    self.globalData.params.staffId = self.globalData.enterByScanCode ? self.globalData.params.staffId : 21
     http('/app/applets/findCandidateByOpenId', 'POST', {
       open_id: self.globalData.open_id,
       staffId: self.globalData.params.staffId
     }).then(res => {
+      // 是否有用户信息
       if (res.data.candidate) {
         if (res.data.candidate.computer_level) {
           switch (res.data.candidate.computer_level) {
@@ -49,49 +50,60 @@ App({
           }
         }
         for (let key in res.data) {
-          if (typeof(res.data[key]) === 'number') {
+          if (typeof (res.data[key]) === 'number') {
             res.data[key] = res.data[key].toString()
           }
         }
         self.globalData.userInfo = res.data.candidate
-        console.log(Array.isArray(res.data.sysUserList))
+        // 是否有投递记录
         if (Array.isArray(res.data.sysUserList)) {
           self.globalData.company = res.data.sysUserList
         }
+        // 当前投递公司Id
         self.globalData.joinId = res.data.userId
       }
 
-      if (self.globalData.enterByCode === '1' && !self.globalData.params.type) {
-        self.globalData.params.staffId = 9999
-        wx.navigateTo({
-          url: "/pages/index/index"
+      // 不是扫码进入
+      if (!self.globalData.enterByScanCode) {
+        // 开关为1, 允许扫码进入
+        if (self.globalData.allowEnterByNoCode === '1') {
+          if (firstEnter) {
+            wx.navigateTo({
+              url: "/pages/index/index"
+            })
+          }
+          return
+        }
+        // 开关为0, 禁止扫码进入
+        wx.showToast({
+          icon: 'none',
+          title: '错误操作, 请扫码进入系统'
         })
-        return
-      }
-
-      // 扫码进入
-      if (type !== 1) {
-        // 根据参数跳转不同的页面
-        if (self.globalData.params.type === '1') {
-          wx.navigateTo({
-            url: "/pages/index/index"
-          })
+      } else {
+        // 扫码进入,首次加载需要跳转
+        if (firstEnter) {
+          // 根据参数跳转不同的页面
+          if (self.globalData.params.type === '1') {
+            wx.navigateTo({
+              url: "/pages/index/index"
+            })
+          }
+          if (self.globalData.params.type === '2') {
+            wx.navigateTo({
+              url: "/pages/examination/index",
+            })
+          }
         }
-        if (self.globalData.params.type === '2') {
-          wx.navigateTo({
-            url: "/pages/examination/index",
-          })
-        }
-        return
       }
     }).catch(res => {
-      wx.showToast({
-        icon: 'none',
-        title: res.msg || '出错啦'
+      self.globalData.enterError = res.msg || '出错啦'
+      wx.navigateTo({
+        url: "/pages/index/index"
       })
     })
   },
 
+  // 设置错误信息
   setResultParams(params) {
     const resultParams = {
       title: '系统提示',
@@ -100,7 +112,6 @@ App({
       redirect: false,
       ...params
     }
-    console.log(resultParams)
     this.globalData.resultParams = resultParams
     if (resultParams.redirect) {
       wx.redirectTo({
@@ -113,15 +124,18 @@ App({
     }
   },
 
-  getEnterType: function() {
+  getEnterType: function () {
     http('/app/applets/smJoin', 'POST').then(res => {
-      this.globalData.enterByCode = res.data.value
-      this.getUserInfo()
+      // 设置可扫码进入状态
+      this.globalData.allowEnterByNoCode = res.data.value
+      this.getUserInfo(true)
     })
   },
 
   globalData: {
-    enterByCode: '',
+    enterByScanCode: true,
+    enterError: '',
+    allowEnterByNoCode: '',
     params: {},
     resultType: 0,
     resultParams: {},

@@ -17,7 +17,7 @@ function JSON_to_URLEncoded(element, key, list) {
 const http = function (url, method, data, title = '加载中...') {
   const app = getApp()
   wx.showLoading({
-    title: '加载中',
+    title
   })
   return new Promise((resolve, reject) => {
     wx.request({

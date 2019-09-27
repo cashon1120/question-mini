@@ -51,10 +51,6 @@ Page({
     oldData: {}
   },
 
-  onLoad: function () {
-    this.initValidate()
-  },
-
   hasStaffId: function (staffId) {
    
     const companyList = app.globalData.company
@@ -65,6 +61,16 @@ Page({
       }
     })
     return exist
+  },
+
+  onLoad(){
+    this.initValidate()
+    if (app.globalData.enterError){
+      wx.showToast({
+        icon: 'none',
+        title: app.globalData.enterError
+      })
+    }
   },
 
   // 初始化表单验证
@@ -167,8 +173,6 @@ Page({
       })
       this.handleSubmitSelectCompany
     }
-
-    const joinId = app.globalData.joinId
     this.setData({
       showCompany: true,
       disabled: false,
@@ -310,7 +314,7 @@ Page({
           showBtn: true,
           success: true
         })
-        app.getUserInfo(1)
+        app.getUserInfo(false)
       }).catch((res) => {
         wx.showToast({
           title: res.msg,
@@ -329,7 +333,7 @@ Page({
         companyArr: res.data,
         canEdit: false
       })
-      app.getUserInfo(1)
+      app.getUserInfo(false)
       this.handleSetSuccss()
     }).catch((res) => {
       wx.showToast({

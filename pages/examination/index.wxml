@@ -1,4 +1,3 @@
-<wxs module="showLetter" src="../../utils/showLetter.wxs"></wxs>
 <view wx:if="{{canTest}}">
   <view class="bg">
     <image src="../../assets/question_bg.jpg" mode="widthFix"></image>

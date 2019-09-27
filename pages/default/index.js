@@ -8,26 +8,32 @@ Page({
     key: '',
     value: '',
   },
-  onLoad: function(options) {
+  onLoad: function (options) {
     if (options.q) {
       const scene = decodeURIComponent(options.q)
       const arr = scene.split('?')
       let params = arr[1].split('&')
       const keyArr = params[0].split('=')
-      const key = keyArr[0]
       const staffId = keyArr[1]
       const type = params[1].split('=')[1]
+      app.globalData.enterByScanCode = true
       app.globalData.params = {
         staffId,
         type
       }
+    } else {
+      app.globalData.enterByScanCode = false
+
+      // 测试
+      
+      // app.globalData.params = {
+      //   staffId: 22,
+      //   type: '2'
+      // }
+      // app.globalData.enterByScanCode = true
     }
 
-    // 测试
-    app.globalData.params = {
-      staffId: 10,
-      type: '1'
-    }
+
 
     const that = this
     wx.getSetting({
@@ -41,16 +47,15 @@ Page({
         }
       },
       fail: function (res) {
-        console.log(res)
         that.isSet = false
       }
     })
   },
 
-  bindGetUserInfo: function(e) {
+  bindGetUserInfo: function (e) {
     if (e.detail.userInfo) {
       wx.getUserInfo({
-        success: function(userInfo) {
+        success: function (userInfo) {
           app.getAuthKey(userInfo).then(res => {
             wx.switchTab({
               url: '/pages/index/index',
