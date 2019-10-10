@@ -27,10 +27,11 @@ Page({
       // 测试
       
       // app.globalData.params = {
-      //   staffId: 22,
+      //   staffId: 113,
       //   type: '2'
       // }
       // app.globalData.enterByScanCode = true
+      
     }
 
 

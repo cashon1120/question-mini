@@ -52,7 +52,6 @@ Page({
   },
 
   hasStaffId: function (staffId) {
-   
     const companyList = app.globalData.company
     let exist = false
     companyList.forEach(item => {
@@ -110,12 +109,12 @@ Page({
       // is_specialized: {
       //   required: true
       // },
-      english_level: {
-        required: true
-      },
-      computer_level: {
-        required: true
-      },
+      // english_level: {
+      //   required: true
+      // },
+      // computer_level: {
+      //   required: true
+      // },
 
     }
     const messages = {
@@ -153,12 +152,12 @@ Page({
       is_specialized: {
         required: '请选择是否专升本'
       },
-      english_level: {
-        required: '请选择英语等级'
-      },
-      computer_level: {
-        required: '请输入计算机等级'
-      },
+      // english_level: {
+      //   required: '请选择英语等级'
+      // },
+      // computer_level: {
+      //   required: '请输入计算机等级'
+      // },
     }
     this.WxValidate = new WxValidate(rules, messages)
   },
@@ -171,12 +170,20 @@ Page({
         formData: app.globalData.userInfo,
         oldData: JSON.parse(JSON.stringify(app.globalData.userInfo))
       })
-      this.handleSubmitSelectCompany
+      // this.handleSubmitSelectCompany()
+    }
+    let hasJoin = false
+    if(app.globalData.joinId){
+      app.globalData.company.forEach(item => {
+        if(item.sysUserId == app.globalData.joinId){
+          hasJoin = true
+        }
+      })
     }
     this.setData({
       showCompany: true,
       disabled: false,
-      hasJoin: false,
+      hasJoin,
       companyArr: app.globalData.company
     })
   },
@@ -233,25 +240,6 @@ Page({
 
   },
 
-  // 切换编辑状态
-  handleEditStatus: function () {
-    const {
-      canEdit,
-      oldData,
-      hasJoin
-    } = this.data
-    this.setData({
-      canEdit: !canEdit,
-      disabled: !hasJoin ? false : canEdit
-    }, () => {
-      if (!this.data.canEdit) {
-        this.setData({
-          formData: JSON.parse(JSON.stringify(oldData))
-        })
-      }
-    })
-  },
-
   // 提交表单
   formSubmit: function (e) {
     const params = e.detail.value
@@ -260,7 +248,7 @@ Page({
       const error = this.WxValidate.errorList[0]
       wx.showToast({
         icon: 'none',
-        title: error.msg
+        title: error.msg || '未知错误'
       })
       return false
     }
@@ -289,14 +277,6 @@ Page({
       staffId: app.globalData.params.staffId
     }
 
-
-
-    // 验证通过后显示选择公司模态框, 看是否要先提交个人信息再显示还是选完公司后一起提交
-    // this.setData({
-    //   loading: true
-    // })
-    // this.handleSetShowModal()
-
     const {
       hasJoin
     } = this.data
@@ -317,7 +297,7 @@ Page({
         app.getUserInfo(false)
       }).catch((res) => {
         wx.showToast({
-          title: res.msg,
+          title: res.msg || '未知错误',
           icon: 'none',
           duration: 2000
         })
@@ -337,7 +317,7 @@ Page({
       this.handleSetSuccss()
     }).catch((res) => {
       wx.showToast({
-        title: res.msg,
+        title: res.msg || '未知错误',
         icon: 'none',
         duration: 2000
       })
@@ -357,26 +337,6 @@ Page({
     })
   },
 
-  // 投递公司
-  handleSubmitSelectCompany: function () {
-    const {
-      userId
-    } = this.data
-    this.setData({
-      loading: true
-    })
-    http('/app/applets/getAllDeliveryState', 'POST', {
-      candidateId: app.globalData.userInfo.id
-    }).then(res => {
-      if (res.success) {
-        this.handleSetShowModal()
-        this.handleSetSuccss()
-      }
-      this.setData({
-        loading: false
-      })
-    })
-  },
 
   // 投递成功
   handleSetSuccss: function () {

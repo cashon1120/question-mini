@@ -27,7 +27,8 @@ App({
   getUserInfo(firstEnter) {
     const self = this
     self.globalData.params.staffId = self.globalData.enterByScanCode ? self.globalData.params.staffId : 21
-    http('/app/applets/findCandidateByOpenId', 'POST', {
+    const apiUrl = self.globalData.params.type === '1' ? 'findCandidateByOpenId' : 'findCandidateByOpenIdKs'
+    http('/app/applets/' + apiUrl, 'POST', {
       open_id: self.globalData.open_id,
       staffId: self.globalData.params.staffId
     }).then(res => {
@@ -97,9 +98,20 @@ App({
       }
     }).catch(res => {
       self.globalData.enterError = res.msg || '出错啦'
-      wx.navigateTo({
-        url: "/pages/index/index"
-      })
+      if (self.globalData.params.type === '1') {
+        wx.navigateTo({
+          url: "/pages/index/index"
+        })
+
+      }
+      if (self.globalData.params.type === '2') {
+        self.setResultParams({
+          title: '错误提示',
+          tips: res.msg || '出错啦',
+          showBtn: false,
+          success: false
+        })
+      }
     })
   },
 
@@ -133,6 +145,7 @@ App({
   },
 
   globalData: {
+    joinId: 0,
     enterByScanCode: true,
     enterError: '',
     allowEnterByNoCode: '',
